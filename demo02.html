@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>条件控制</title>
+    <!--引入jQuery-->
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <!--引入handlebars-->
+    <script src="js/handlebars/handlebars.js"></script>
+    <script>
+        //过滤年龄<26或者年龄26的数据
+        Handlebars.registerHelper('filterAge',function (age) {
+            if(age<26||age==26){
+                return true;
+            }
+            return false;
+        })
+
+    </script>
+</head>
+<body>
+<h1>条件控制</h1>
+<!--用户列表-->
+<table id="data-table" border="1px" >
+    <tr>
+        <th>编号</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>昵称</th>
+        <th>爱好</th>
+        <th>地址</th>
+        <th>学校</th>
+        <th>学校地址</th>
+        <th>学费</th>
+    </tr>
+</table>
+<!--用户列表模板-->
+<script type="text/x-handlebars-template" id="data-templete">
+    <!--遍历后台的数据-->
+    {{#each student}}
+    {{#if (filterAge age)}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{name}}</td>
+        <td>{{age}}</td>
+        <td>{{nickName}}</td>
+        <td>{{userInfo.hobby}}</td>
+        <td>{{userInfo.address}}</td>
+        <td>{{../name}}</td><!--取上一级的数据-->
+        <td>{{../address}}</td>
+        <td>{{ money}}</td>
+    </tr>
+    {{/if}}
+    {{/each}}
+</script>
+</body>
+<script type="text/javascript">
+    //后台返回的数据
+    var school = {
+        name:'北京大学',
+        address:'海淀区',
+        student: [
+            {
+                "id": 1,
+                "name": "lisi",
+                "age": 26,
+                "nickName": "李四",
+                userInfo:{
+                    hobby:'打篮球',
+                    address:'北京'
+                },
+                money:62523232.234234
+            },
+            {
+                "id": 2,
+                "name": "zhangsan",
+                "age": 27,
+                "nickName": "张三",
+                userInfo:{
+                    hobby:'画画',
+                    address:'上海'
+                },
+                money:8888888888.2353423
+            }
+        ]
+    }
+    //获取模板
+    var templet = $("#data-templete").html();
+    //编译模板
+    var tp = Handlebars.compile(templet);
+    //获取html代码
+    var newHtml = tp(school);
+    $("#data-table").append(newHtml);
+</script>
+</html>
